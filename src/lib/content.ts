@@ -14,9 +14,9 @@ function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
 export const frontMatterSchema = z.object({
   title: z.string().min(1),
   date: z.preprocess((v) => {
-  if (v instanceof Date) return v.toISOString().slice(0, 10);
-  return v;
-}, z.string().min(1)),
+    if (v instanceof Date) return v.toISOString().slice(0, 10);
+    return v;
+  }, z.string().min(1)),
   slug: z.string().regex(slugRegex),
   description: z.string().min(1),
   tags: z.array(z.string().min(1)),
@@ -63,7 +63,9 @@ export async function listEntries(kind: ContentKind): Promise<ContentEntry[]> {
   }
 
   // date の降順に並べたいならここでソート（文字列前提の簡易）
-  return entries.sort((a, b) => (a.frontMatter.date < b.frontMatter.date ? 1 : -1));
+  return entries.sort((a, b) =>
+    a.frontMatter.date < b.frontMatter.date ? 1 : -1,
+  );
 }
 
 export async function getEntryBySlug(
@@ -86,7 +88,9 @@ export async function getEntryBySlug(
 
     // 二重安全（ファイル名と一致している前提）
     if (fm.slug !== slug) {
-      throw new Error(`[content] frontmatter slug mismatch: ${fm.slug} != ${slug}`);
+      throw new Error(
+        `[content] frontmatter slug mismatch: ${fm.slug} != ${slug}`,
+      );
     }
 
     return { kind, filePath, frontMatter: fm, body: parsed.content };

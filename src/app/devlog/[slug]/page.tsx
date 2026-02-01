@@ -15,7 +15,10 @@ export async function generateMetadata({
   params: { slug: string };
 }) {
   const entry = await getEntryBySlug('devlog', params.slug);
-  if (!entry || (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)) {
+  if (
+    !entry ||
+    (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)
+  ) {
     return {};
   }
   return {
@@ -27,7 +30,8 @@ export async function generateMetadata({
 export default async function Page({ params }: { params: { slug: string } }) {
   const entry = await getEntryBySlug('devlog', params.slug);
   if (!entry) notFound();
-  if (process.env.NODE_ENV === 'production' && entry.frontMatter.draft) notFound();
+  if (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)
+    notFound();
 
   return (
     <main style={{ padding: 24 }}>
