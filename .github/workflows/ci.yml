@@ -11,16 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
-      - name: Enable corepack
-        run: corepack enable
-
-      - name: Activate pnpm
-        run: corepack prepare pnpm@10.13.1 --activate
 
       - name: Show versions
         run: |
