@@ -13,7 +13,10 @@ function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
 
 export const frontMatterSchema = z.object({
   title: z.string().min(1),
-  date: z.string().min(1), // まずは文字列で扱う（必要なら後でISO厳格化）
+  date: z.preprocess((v) => {
+  if (v instanceof Date) return v.toISOString().slice(0, 10);
+  return v;
+}, z.string().min(1)),
   slug: z.string().regex(slugRegex),
   description: z.string().min(1),
   tags: z.array(z.string().min(1)),
@@ -73,7 +76,13 @@ export async function getEntryBySlug(
   try {
     const raw = await fs.readFile(filePath, 'utf8');
     const parsed = matter(raw);
-    const fm = frontMatterSchema.parse(parsed.data);
+    let fm: FrontMatter;
+    try {
+      fm = frontMatterSchema.parse(parsed.data);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      throw new Error(`[content] invalid front matter: ${filePath}\n${msg}`);
+    }
 
     // 二重安全（ファイル名と一致している前提）
     if (fm.slug !== slug) {
