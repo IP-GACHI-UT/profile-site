@@ -19,6 +19,14 @@ jobs:
       - name: Enable corepack
         run: corepack enable
 
+      - name: Activate pnpm
+        run: corepack prepare pnpm@10.13.1 --activate
+
+      - name: Show versions
+        run: |
+          node -v
+          pnpm -v
+
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
