@@ -22,7 +22,7 @@ async function main() {
 }
 
 main().catch((err: unknown) => {
-  const msg = err instanceof Error ? err.stack ?? err.message : String(err);
+  const msg = err instanceof Error ? (err.stack ?? err.message) : String(err);
   console.error(msg);
   process.exit(1);
 });

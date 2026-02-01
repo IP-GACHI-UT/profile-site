@@ -9,9 +9,16 @@ export async function generateStaticParams() {
     .map((e) => ({ slug: e.frontMatter.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const entry = await getEntryBySlug('posts', params.slug);
-  if (!entry || (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)) {
+  if (
+    !entry ||
+    (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)
+  ) {
     return {};
   }
   return {
@@ -23,7 +30,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function Page({ params }: { params: { slug: string } }) {
   const entry = await getEntryBySlug('posts', params.slug);
   if (!entry) notFound();
-  if (process.env.NODE_ENV === 'production' && entry.frontMatter.draft) notFound();
+  if (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)
+    notFound();
 
   return (
     <main style={{ padding: 24 }}>
