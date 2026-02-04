@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { getEntryBySlug, listEntries } from '@/lib/content';
+import { Scroll50Tracker } from '@/app/components/Scroll50Tracker';
 
 export async function generateStaticParams() {
   const entries = await listEntries('posts');
@@ -34,9 +35,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
     notFound();
 
   return (
-    <main style={{ padding: 24 }}>
-      <h1>{entry.frontMatter.title}</h1>
-      <MDXRemote source={entry.body} />
-    </main>
+    <>
+      <Scroll50Tracker />
+      <main style={{ padding: 24 }}>
+        <h1>{entry.frontMatter.title}</h1>
+        <MDXRemote source={entry.body} />
+      </main>
+    </>
   );
 }
