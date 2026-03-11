@@ -13,6 +13,9 @@
     "format:check": "biome check .",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report",
     "build-storybook": "storybook build"
   },
   "dependencies": {
