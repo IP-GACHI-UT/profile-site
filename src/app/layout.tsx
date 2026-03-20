@@ -33,7 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        {children}
+        <main className="min-h-screen">{children}</main>
         {gaId && <GoogleAnalytics gaId={gaId} />}
         <Footer />
       </body>
