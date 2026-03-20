@@ -29,14 +29,14 @@ export default function RootLayout({
 
   return (
     <html lang="ja">
-      <Header />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header />
         {children}
         {gaId && <GoogleAnalytics gaId={gaId} />}
+        <Footer />
       </body>
-      <Footer />
     </html>
   );
 }
