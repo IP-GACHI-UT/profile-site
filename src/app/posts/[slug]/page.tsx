@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
-import { getEntryBySlug, listEntries } from '@/lib/content';
 import { Scroll50Tracker } from '@/app/components/Scroll50Tracker';
+import { getEntryBySlug, listEntries } from '@/lib/content';
 
 export async function generateStaticParams() {
   const entries = await listEntries('posts');
