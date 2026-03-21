@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Button from './Button';
 
 export default function Header() {
   return (
@@ -10,11 +11,9 @@ export default function Header() {
         </Link>
 
         {/* 投稿ページ */}
-        <Link href="/posts/new">
-          <button className="text-sm text-gray-500" type="button">
-            <span>投稿</span>
-          </button>
-        </Link>
+        <Button href="/posts/new">
+          <span>投稿</span>
+        </Button>
       </div>
     </header>
   );
