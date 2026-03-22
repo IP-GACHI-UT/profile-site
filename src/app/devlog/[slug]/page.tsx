@@ -13,9 +13,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  // Next.js App Router v16+ treats `params` as a Promise in some dynamic APIs.
+  // Await it before accessing `params.slug`.
+  params: Promise<{ slug: string }>;
 }) {
-  const entry = await getEntryBySlug('devlog', params.slug);
+  const { slug } = await params;
+  const entry = await getEntryBySlug('devlog', slug);
   if (
     !entry ||
     (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)
