@@ -7,7 +7,7 @@ export default function ArticleCard({ entry }: { entry: ContentEntry }) {
   return (
     <Link href={`/posts/${slug}`}>
       <div className="border p-4 rounded-lg cursor-pointer">
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <h3 className="text-xl font-semibold">{title}</h3>
         <p className="text-gray-600">{description}</p>
       </div>
     </Link>
