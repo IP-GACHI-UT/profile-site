@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import Button from './Button';
+import Button from '../ui/Button';
 
 export default function Header() {
   return (
-    <header className="border-b px-6 py-4 sticky top-0 bg-white z-10">
+    <header className="border-b px-6 py-4 sticky top-0 z-10">
       <div className="flex justify-between items-center">
         {/* ロゴ */}
         <Link href="/">
