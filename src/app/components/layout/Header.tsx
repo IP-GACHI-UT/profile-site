@@ -11,7 +11,7 @@ export default function Header() {
         </Link>
 
         {/* 投稿ページ */}
-        <Button href="/posts/new">
+        <Button href="/posts/form">
           <span>投稿</span>
         </Button>
       </div>
