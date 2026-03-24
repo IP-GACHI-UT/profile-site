@@ -6,16 +6,31 @@ export default function PostForm() {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const createMDX = (slug: string) => {
+    return `---
+title: '${title}'
+date: '${new Date().toISOString().slice(0, 10)}'
+slug: '${slug}'
+description: '投稿フォームから作成'
+tags: ['${author || 'user'}']
+draft: false
+---
+
+${content}
+`;
+  };
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    const postData = {
-      title,
-      content,
-      author,
-    };
+    const slug = Date.now().toString();
+    const mdxContent = createMDX(slug);
 
-    console.log('投稿データ', postData);
+    await fetch('/api/posts', {
+      method: 'POST',
+      body: JSON.stringify({ mdx: mdxContent, slug }),
+      headers: { 'Content-Type': 'application/json' },
+    });
 
     alert('投稿しました！');
   };
