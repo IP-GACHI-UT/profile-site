@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { type NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
   const { mdx, slug } = await req.json();
   const safeSlug = typeof slug === 'string' ? slug : '';
