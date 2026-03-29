@@ -26,13 +26,22 @@ ${content}
     const slug = Date.now().toString();
     const mdxContent = createMDX(slug);
 
-    await fetch('/api/posts', {
-      method: 'POST',
-      body: JSON.stringify({ mdx: mdxContent, slug }),
-      headers: { 'Content-Type': 'application/json' },
-    });
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: JSON.stringify({ mdx: mdxContent, slug }),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    alert('投稿しました！');
+      if (!res.ok) {
+        alert('投稿に失敗しました。時間をおいて再度お試しください。');
+        return;
+      }
+
+      alert('投稿しました！');
+    } catch (error) {
+      alert('投稿に失敗しました。ネットワーク状態を確認して再度お試しください。');
+    }
   };
 
   return (
