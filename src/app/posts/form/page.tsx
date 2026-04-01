@@ -6,14 +6,19 @@ export default function PostForm() {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
 
+  const canSubmit =
+    title.trim().length > 0 && content.trim().length > 0 && author.length > 0;
+
+  const yamlQuote = (value: string) => JSON.stringify(value);
+
   // MDXファイルを作成する
   const createMDX = (slug: string) => {
     return `---
-title: '${title}'
-date: '${new Date().toISOString().slice(0, 10)}'
-slug: '${slug}'
-description: '投稿フォームから作成'
-tags: ['${author || 'user'}']
+title: ${yamlQuote(title)}
+date: ${yamlQuote(new Date().toISOString().slice(0, 10))}
+slug: ${yamlQuote(slug)}
+description: ${yamlQuote('投稿フォームから作成')}
+tags: [${yamlQuote(author)}]
 draft: false
 ---
 
@@ -23,6 +28,7 @@ ${content}
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    if (!canSubmit) return;
 
     const slug = Date.now().toString();
     const mdxContent = createMDX(slug);
@@ -85,7 +91,9 @@ ${content}
 
         {/* 投稿者 */}
         <div>
+          <label htmlFor="post-author">投稿者</label>
           <select
+            id="post-author"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             style={{ width: '100%', padding: '8px', marginBottom: '16px' }}
@@ -97,7 +105,11 @@ ${content}
         </div>
 
         {/* 投稿ボタン */}
-        <button type="submit" style={{ padding: '10px 20px' }}>
+        <button
+          type="submit"
+          disabled={!canSubmit}
+          style={{ padding: '10px 20px' }}
+        >
           投稿
         </button>
       </form>
