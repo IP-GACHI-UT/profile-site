@@ -6,6 +6,7 @@ export default function PostForm() {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
 
+  // MDXファイルを作成する
   const createMDX = (slug: string) => {
     return `---
 title: '${title}'
@@ -27,6 +28,7 @@ ${content}
     const mdxContent = createMDX(slug);
 
     try {
+      // APIに送信
       const res = await fetch('/api/posts', {
         method: 'POST',
         body: JSON.stringify({ mdx: mdxContent, slug }),
@@ -39,8 +41,10 @@ ${content}
       }
 
       alert('投稿しました！');
-    } catch (error) {
-      alert('投稿に失敗しました。ネットワーク状態を確認して再度お試しください。');
+    } catch (_error) {
+      alert(
+        '投稿に失敗しました。ネットワーク状態を確認して再度お試しください。',
+      );
     }
   };
 
