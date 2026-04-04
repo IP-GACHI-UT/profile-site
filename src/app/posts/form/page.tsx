@@ -18,7 +18,8 @@ title: ${yamlQuote(title)}
 date: ${yamlQuote(new Date().toISOString().slice(0, 10))}
 slug: ${yamlQuote(slug)}
 description: ${yamlQuote('投稿フォームから作成')}
-tags: [${yamlQuote(author)}]
+tags: []
+author: ${yamlQuote(author)}
 draft: false
 ---
 
