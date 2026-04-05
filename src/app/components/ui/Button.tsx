@@ -8,6 +8,7 @@ type Props = {
   href?: string;
   variant?: 'primary' | 'secondary';
   type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -16,6 +17,7 @@ export default function Button({
   href,
   variant = 'primary',
   type = 'button',
+  disabled = false,
 }: Props) {
   const baseStyle = 'px-4 py-2 rounded-lg transition';
 
@@ -24,9 +26,10 @@ export default function Button({
     secondary: 'bg-gray-200 text-black hover:bg-gray-300',
   };
 
-  const className = `${baseStyle} ${styles[variant]}`;
+  const disabledStyle = disabled ? 'opacity-50 cursor-not-allowed' : '';
+  const className = `${baseStyle} ${styles[variant]} ${disabledStyle}`;
 
-  if (href) {
+  if (href && !disabled) {
     return (
       <Link href={href} className={className}>
         {children}
@@ -35,7 +38,12 @@ export default function Button({
   }
 
   return (
-    <button type={type} onClick={onClick} className={className}>
+    <button
+      type={type}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      className={className}
+    >
       {children}
     </button>
   );
