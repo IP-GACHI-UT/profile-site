@@ -1,4 +1,5 @@
 'use client';
+import { Send } from 'lucide-react';
 import { useState } from 'react';
 import Button from '@/app/components/ui/Button';
 
@@ -12,18 +13,18 @@ import Button from '@/app/components/ui/Button';
  */
 export default function PostForm() {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
+  const [content, setContent] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const canSubmit =
-    title.trim().length > 0 && content.trim().length > 0 && author.length > 0;
+    title.trim().length > 0 && author.length > 0 && content.trim().length > 0;
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     if (!title.trim()) newErrors.title = 'タイトルは必須です';
-    if (!content.trim()) newErrors.content = '本文は必須です';
     if (!author) newErrors.author = '投稿者を選択してください';
+    if (!content.trim()) newErrors.content = '本文は必須です';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -69,8 +70,8 @@ ${content}
       alert('投稿しました！');
       // リセット
       setTitle('');
-      setContent('');
       setAuthor('');
+      setContent('');
       setErrors({});
     } catch (_error) {
       alert(
@@ -80,17 +81,20 @@ ${content}
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-2">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-          新規投稿
+        <h1 className="text-3xl font-bold text-left mb-4 text-gray-900 dark:text-white">
+          記事を書く
         </h1>
+        <p className="text-left text-gray-600 dark:text-gray-300 mb-8">
+          開発日記でも、ゲームレビューでも、好きなことを書いてOK
+        </p>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* タイトル */}
           <div>
             <label
               htmlFor="post-title"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 after:content-['*'] after:ml-0.5 after:text-red-500"
             >
               タイトル
             </label>
@@ -99,7 +103,7 @@ ${content}
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="タイトルを入力"
+              placeholder="記事のタイトルを入力"
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             />
             {errors.title && (
@@ -109,34 +113,11 @@ ${content}
             )}
           </div>
 
-          {/* 本文 */}
-          <div>
-            <label
-              htmlFor="post-content"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >
-              本文
-            </label>
-            <textarea
-              id="post-content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="本文を入力"
-              rows={6}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-vertical"
-            />
-            {errors.content && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                {errors.content}
-              </p>
-            )}
-          </div>
-
           {/* 投稿者 */}
           <div>
             <label
               htmlFor="post-author"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 after:content-['*'] after:ml-0.5 after:text-red-500"
             >
               投稿者
             </label>
@@ -157,9 +138,37 @@ ${content}
             )}
           </div>
 
+          {/* 本文 */}
+          <div>
+            <label
+              htmlFor="post-content"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 after:content-['*'] after:ml-0.5 after:text-red-500"
+            >
+              本文
+            </label>
+            <textarea
+              id="post-content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="記事の本文を入力（MDX形式で書いてもOK）"
+              rows={12}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-vertical"
+            />
+            {errors.content && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {errors.content}
+              </p>
+            )}
+          </div>
+
           {/* 投稿ボタン */}
-          <div className="text-center">
-            <Button type="submit" disabled={!canSubmit} variant="primary">
+          <div className="flex justify-end">
+            <Button
+              icon={Send}
+              type="submit"
+              disabled={!canSubmit}
+              variant="primary"
+            >
               投稿する
             </Button>
           </div>
