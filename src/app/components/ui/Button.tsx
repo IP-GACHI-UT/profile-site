@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 type Props = {
+  icon?: React.ComponentType<{ size?: number }>;
   children: React.ReactNode;
   onClick?: () => void;
   href?: string;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function Button({
+  icon: Icon,
   children,
   onClick,
   href,
@@ -19,7 +21,7 @@ export default function Button({
   type = 'button',
   disabled = false,
 }: Props) {
-  const baseStyle = 'px-4 py-2 rounded-lg transition';
+  const baseStyle = 'flex items-center gap-2 px-4 py-2 rounded-lg transition';
 
   const styles = {
     primary: 'bg-green-500 text-white hover:bg-green-600',
@@ -44,6 +46,7 @@ export default function Button({
       disabled={disabled}
       className={className}
     >
+      {Icon && <Icon size={16} />}
       {children}
     </button>
   );
