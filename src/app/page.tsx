@@ -1,12 +1,23 @@
-import ArticleList from './_components/ArticleList';
+import Container from '@/app/components/common/Container';
+import SectionLabel from '@/app/components/common/SectionLabel';
+import PostList from '@/app/components/post/PostList';
+import { listPublishedPosts } from '@/lib/content';
 
 // ルートページのコンポーネント
-export default function Home() {
-  return (
-    <section className="space-y-6 px-6 py-8">
-      <h1 className="text-2xl font-bold">Profile</h1>
+export default async function Home() {
+  const posts = await listPublishedPosts();
 
-      <ArticleList heading="最新の投稿" limit={4} />
-    </section>
+  return (
+    <main className="py-16">
+      <Container className="space-y-10">
+        <SectionLabel
+          label="Profile"
+          title="最新の投稿"
+          description="新しく公開した記事を優先して表示しています。プロフィールサイト全体の更新をここから追えます。"
+        />
+
+        <PostList posts={posts.slice(0, 4)} />
+      </Container>
+    </main>
   );
 }

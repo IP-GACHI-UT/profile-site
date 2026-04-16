@@ -1,15 +1,20 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
+import ArticleProse from '@/app/components/article/ArticleProse';
+import AuthorCard from '@/app/components/article/AuthorCard';
+import Container from '@/app/components/common/Container';
 import { Scroll50Tracker } from '@/app/components/Scroll50Tracker';
-import { getEntryBySlug, listEntries } from '@/lib/content';
+import {
+  getPostBySlug,
+  listPublishedPosts,
+  shouldHideDraft,
+} from '@/lib/content';
 
 export async function generateStaticParams() {
-  const entries = await listEntries('posts');
+  const entries = await listPublishedPosts();
 
-  return entries
-    .filter((entry) => !entry.frontMatter.draft)
-    .map((entry) => ({ slug: entry.frontMatter.slug }));
+  return entries.map((entry) => ({ slug: entry.frontMatter.slug }));
 }
 
 export async function generateMetadata({
@@ -18,12 +23,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = await getEntryBySlug('posts', slug);
+  const entry = await getPostBySlug(slug);
 
-  if (
-    !entry ||
-    (process.env.NODE_ENV === 'production' && entry.frontMatter.draft)
-  ) {
+  if (!entry || shouldHideDraft(entry)) {
     return {};
   }
 
@@ -39,13 +41,13 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = await getEntryBySlug('posts', slug);
+  const entry = await getPostBySlug(slug);
 
   if (!entry) {
     notFound();
   }
 
-  if (process.env.NODE_ENV === 'production' && entry.frontMatter.draft) {
+  if (shouldHideDraft(entry)) {
     notFound();
   }
 
@@ -53,8 +55,8 @@ export default async function Page({
     <>
       <Scroll50Tracker />
 
-      <main className="px-6 py-10">
-        <div className="mx-auto max-w-3xl">
+      <main className="py-14">
+        <Container className="max-w-5xl space-y-8">
           <div className="mb-6">
             <Link
               href="/posts"
@@ -64,40 +66,46 @@ export default async function Page({
             </Link>
           </div>
 
-          <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-10">
-            <header className="mb-10 border-b border-gray-200 pb-6">
-              <div className="mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-                <span>投稿者: {entry.frontMatter.author}</span>
-                <span>投稿日: {entry.frontMatter.date}</span>
-              </div>
-
-              <h1 className="mb-4 text-3xl font-bold leading-tight md:text-4xl">
-                {entry.frontMatter.title}
-              </h1>
-
-              <p className="text-base leading-7 text-gray-600">
-                {entry.frontMatter.description}
-              </p>
-
-              {entry.frontMatter.tags.length > 0 && (
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {entry.frontMatter.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+            <article className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm md:p-10">
+              <header className="mb-10 border-b border-gray-200 pb-6">
+                <div className="mb-3 flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                  <span>投稿者: {entry.frontMatter.author}</span>
+                  <span>投稿日: {entry.frontMatter.date}</span>
                 </div>
-              )}
-            </header>
 
-            <div className="article-content">
-              <MDXRemote source={entry.body} />
+                <h1 className="mb-4 text-3xl font-bold leading-tight text-gray-950 md:text-4xl">
+                  {entry.frontMatter.title}
+                </h1>
+
+                <p className="text-base leading-7 text-gray-600">
+                  {entry.frontMatter.description}
+                </p>
+
+                {entry.frontMatter.tags.length > 0 ? (
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {entry.frontMatter.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-emerald-50 px-3 py-1 text-sm text-emerald-700"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </header>
+
+              <ArticleProse>
+                <MDXRemote source={entry.body} />
+              </ArticleProse>
+            </article>
+
+            <div className="lg:sticky lg:top-24">
+              <AuthorCard authorName={entry.frontMatter.author} />
             </div>
-          </article>
-        </div>
+          </div>
+        </Container>
       </main>
     </>
   );

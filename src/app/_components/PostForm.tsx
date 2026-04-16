@@ -2,6 +2,7 @@
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import Button from '@/app/components/ui/Button';
+import { listAuthorNames } from '@/lib/authors';
 
 /**
  *  投稿フォームコンポーネント
@@ -12,6 +13,7 @@ import Button from '@/app/components/ui/Button';
  * - バリデーションとエラーハンドリングを実装
  */
 export default function PostForm() {
+  const authorOptions = listAuthorNames();
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
@@ -81,7 +83,7 @@ ${content}
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-2">
+    <div className="mx-auto max-w-2xl p-2">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
         <h1 className="text-3xl font-bold text-left mb-4 text-gray-900 dark:text-white">
           記事を書く
@@ -128,8 +130,11 @@ ${content}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="">選択してください</option>
-              <option value="user1">ユーザー1</option>
-              <option value="user2">ユーザー2</option>
+              {authorOptions.map((authorOption) => (
+                <option key={authorOption} value={authorOption}>
+                  {authorOption}
+                </option>
+              ))}
             </select>
             {errors.author && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">

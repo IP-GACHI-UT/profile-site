@@ -86,6 +86,8 @@ export type ContentEntry<K extends ContentKind = ContentKind> = {
   body: string;
 };
 
+export type PostEntry = ContentEntry<'posts'>;
+
 /**
  * コンテンツの種類ごとにフロントマターのスキーマを定義するオブジェクト。
  */
@@ -143,6 +145,16 @@ export async function listEntries<K extends ContentKind>(
 }
 
 /**
+ * 投稿一覧に表示する公開済みの記事だけを取得する。
+ * @returns 公開済み投稿の配列
+ */
+export async function listPublishedPosts(): Promise<PostEntry[]> {
+  const entries = await listEntries('posts');
+
+  return entries.filter((entry) => !entry.frontMatter.draft);
+}
+
+/**
  * 指定されたスラッグに対応するコンテンツエントリーを取得する。
  * @param kind コンテンツの種類
  * @param slug コンテンツのスラッグ
@@ -191,4 +203,24 @@ export async function getEntryBySlug<K extends ContentKind>(
 
     throw error;
   }
+}
+
+/**
+ * 投稿スラッグから記事を取得する。
+ * @param slug 投稿スラッグ
+ * @returns 投稿エントリーまたはnull
+ */
+export async function getPostBySlug(slug: string): Promise<PostEntry | null> {
+  return getEntryBySlug('posts', slug);
+}
+
+/**
+ * 本番環境で下書きを非表示にする判定を行う。
+ * @param entry 判定対象のエントリー
+ * @returns 本番環境で非表示にすべき場合はtrue
+ */
+export function shouldHideDraft(
+  entry: Pick<ContentEntry, 'frontMatter'>,
+): boolean {
+  return process.env.NODE_ENV === 'production' && entry.frontMatter.draft;
 }
