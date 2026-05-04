@@ -29,7 +29,7 @@ export default async function Home() {
               最新の記事
             </h2>
           </div>
-          <PostList posts={posts.slice(0, 4)} />
+          <PostList posts={posts} />
         </section>
       </Container>
     </main>

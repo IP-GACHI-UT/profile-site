@@ -19,7 +19,7 @@ export default function PostList({
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
+    <ul className="post-list-divider">
       {posts.map((post) => (
         <PostListItem key={post.frontMatter.slug} post={post} />
       ))}
