@@ -17,7 +17,7 @@ function createPreviewText(body: string, maxLength: number = 120) {
 }
 
 export default function PostListItem({ post }: Props) {
-  const { slug, title, date, author, tags } = post.frontMatter;
+  const { slug, title, date, author, category } = post.frontMatter;
   const authorProfile = getAuthorByName(author);
   const previewText = createPreviewText(post.body);
 
@@ -40,18 +40,9 @@ export default function PostListItem({ post }: Props) {
             <p className="text-sm leading-7 text-gray-600">{previewText}</p>
           </div>
 
-          {tags.length > 0 ? (
-            <div className="mt-auto flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          ) : null}
+          <div className="mt-auto">
+            <span className="category-pill">{category}</span>
+          </div>
         </article>
       </Link>
     </li>

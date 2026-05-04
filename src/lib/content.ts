@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { z } from 'zod';
-import { postCategoryValues as postCategoryValuesForSchema } from '@/lib/post-categories';
+import { postCategoryValues } from '@/lib/post-categories';
 
 // コンテンツの種類を表す型で、'posts'と'devlog'のどちらかになる。
 export type ContentKind = 'posts' | 'devlog';
@@ -43,19 +43,13 @@ const baseFrontMatterSchema = z.object({
   draft: z.boolean(),
 });
 
-export const postCategoryValues = [
-  '技術投稿',
-  '開発ログ',
-  'ゲーム感想',
-] as const;
-
 /**
  * 投稿コンテンツのフロントマターのスキーマを定義する。
- * 基本的なフロントマターに加えて、著者フィールドを必須とする。
+ * 基本的なフロントマターに加えて、著者とカテゴリを必須とする。
  */
 export const postFrontMatterSchema = baseFrontMatterSchema.extend({
   author: z.string().min(1),
-  category: z.enum(postCategoryValuesForSchema),
+  category: z.enum(postCategoryValues),
 });
 
 /**
