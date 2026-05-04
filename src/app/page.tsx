@@ -1,4 +1,5 @@
 import Container from '@/app/components/common/Container';
+import SectionLabel from '@/app/components/common/SectionLabel';
 import PostList from '@/app/components/post/PostList';
 import { listPublishedPosts } from '@/lib/content';
 
@@ -9,15 +10,11 @@ export default async function Home() {
     <main className="pb-14">
       <Container>
         <section className="mb-7 pt-10 pb-3">
-          <p className="section-label">ゲーム × 開発 × 実践知</p>
-          <div className="mt-4 max-w-3xl space-y-3">
-            <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
-              ゲームと開発の知見を共有する
-            </h1>
-            <p className="max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
-              複数の開発者が、ゲームのプレイ感想・技術・開発事情・リリース情報を共有するメディアです。
-            </p>
-          </div>
+          <SectionLabel
+            label="ゲーム × 開発 × 実践知"
+            title="ゲームと開発の知見を共有する"
+            description="GtoWell は、ゲームのプレイ感想・技術・開発事情・リリース情報をまとめて読めるコンテンツサイトです。"
+          />
         </section>
 
         <section>

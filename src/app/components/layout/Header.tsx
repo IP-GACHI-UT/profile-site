@@ -13,7 +13,7 @@ export default function Header() {
           />
           <span className="flex flex-col">
             <span className="text-lg font-semibold text-text-primary">
-              toWell
+              GtoWell
             </span>
             <span className="text-xs font-medium text-text-muted">
               記事と開発ログのポータル

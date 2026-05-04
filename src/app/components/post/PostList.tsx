@@ -12,7 +12,7 @@ export default function PostList({
 }: Props) {
   if (posts.length === 0) {
     return (
-      <div className="rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-10 text-center text-gray-600">
+      <div className="rounded-lg border border-dashed border-border bg-surface px-6 py-10 text-center text-text-muted">
         {emptyMessage}
       </div>
     );

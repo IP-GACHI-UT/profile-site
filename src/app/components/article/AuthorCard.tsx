@@ -13,27 +13,29 @@ export default function AuthorCard({ authorName }: Props) {
   const author = getAuthorByName(authorName);
 
   return (
-    <aside className="rounded-3xl border border-gray-200 bg-gray-50 p-6">
+    <aside className="rounded-lg border border-border bg-surface p-6">
       <div className="flex items-center gap-4">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-lg font-bold text-emerald-800">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-lg font-bold text-accent">
           {createInitial(author.name)}
         </div>
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-gray-500">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-text-muted">
             Author
           </p>
-          <h2 className="text-xl font-semibold text-gray-950">{author.name}</h2>
-          <p className="text-sm text-gray-600">{author.role}</p>
+          <h2 className="text-xl font-semibold text-text-primary">
+            {author.name}
+          </h2>
+          <p className="text-sm text-text-secondary">{author.role}</p>
         </div>
       </div>
 
-      <p className="mt-4 text-sm leading-7 text-gray-600">{author.bio}</p>
+      <p className="mt-4 text-sm leading-7 text-text-secondary">{author.bio}</p>
 
       {author.site ? (
         <div className="mt-5">
           <Link
             href={author.site}
-            className="text-sm font-medium text-emerald-700 underline-offset-4 hover:underline"
+            className="text-sm font-medium text-accent underline-offset-4 hover:underline"
           >
             著者のプロフィールを見る
           </Link>
