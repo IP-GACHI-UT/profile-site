@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { z } from 'zod';
+import { postCategoryValues as postCategoryValuesForSchema } from '@/lib/post-categories';
 
 // コンテンツの種類を表す型で、'posts'と'devlog'のどちらかになる。
 export type ContentKind = 'posts' | 'devlog';
@@ -54,7 +55,7 @@ export const postCategoryValues = [
  */
 export const postFrontMatterSchema = baseFrontMatterSchema.extend({
   author: z.string().min(1),
-  category: z.enum(postCategoryValues),
+  category: z.enum(postCategoryValuesForSchema),
 });
 
 /**

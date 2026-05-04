@@ -3,7 +3,7 @@ import { Send } from 'lucide-react';
 import { useState } from 'react';
 import Button from '@/app/components/ui/Button';
 import { listAuthorNames } from '@/lib/authors';
-import { postCategoryValues } from '@/lib/content';
+import { postCategoryValues } from '@/lib/post-categories';
 
 /**
  *  投稿フォームコンポーネント
