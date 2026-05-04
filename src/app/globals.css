@@ -55,7 +55,7 @@ body {
 }
 
 .section-label {
-  color: var(--accent-hover);
+  color: var(--accent);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.24em;
@@ -64,7 +64,7 @@ body {
 }
 
 .post-list-divider {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(42, 48, 56, 0.5);
 }
 
 .category-pill {

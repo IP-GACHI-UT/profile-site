@@ -5,7 +5,7 @@ import Button from '../ui/Button';
 export default function Header() {
   return (
     <header className="sticky top-0 z-50 h-16 border-b border-border bg-background/95 backdrop-blur">
-      <Container className="flex h-full items-center justify-between gap-4">
+      <Container className="flex h-full max-w-7xl items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3">
           <span
             aria-hidden="true"

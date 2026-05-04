@@ -6,19 +6,15 @@ type Props = {
 
 export default function SectionLabel({ label, title, description }: Props) {
   return (
-    <div className="space-y-3">
-      {label ? (
-        <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-700">
-          {label}
-        </p>
-      ) : null}
+    <div className="space-y-3 border-l-2 border-accent pl-4">
+      {label ? <p className="section-label">{label}</p> : null}
 
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-950 md:text-4xl">
+        <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
           {title}
         </h1>
         {description ? (
-          <p className="max-w-2xl text-base leading-7 text-gray-600">
+          <p className="max-w-2xl text-sm leading-7 text-text-secondary sm:text-base">
             {description}
           </p>
         ) : null}
