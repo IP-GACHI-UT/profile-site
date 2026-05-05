@@ -9,6 +9,7 @@
   --accent-hover: #91b4ff;
   --accent-soft: #1a2333;
   --border: #2a3038;
+  --heading-primary: #e8ecff;
   --text-primary: #f5f7fa;
   --text-secondary: #c7cdd6;
   --text-muted: #8b95a3;
@@ -104,7 +105,9 @@ body {
 .article-content h2 {
   margin-top: 3rem;
   margin-bottom: 1rem;
-  color: var(--text-primary);
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--heading-primary);
   font-size: 1.75rem;
   font-weight: 700;
   line-height: 1.4;
