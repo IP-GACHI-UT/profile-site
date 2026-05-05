@@ -4,8 +4,8 @@ import matter from 'gray-matter';
 import { z } from 'zod';
 import { postCategoryValues } from '@/lib/post-categories';
 
-// コンテンツの種類を表す型で、'posts'と'devlog'のどちらかになる。
-export type ContentKind = 'posts' | 'devlog';
+// コンテンツの種類を表す型。現在は投稿記事のみを扱う。
+export type ContentKind = 'posts';
 
 // スラッグの正規表現。小文字の英数字とハイフンのみを許可し、ハイフンは連続して使用できない。
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -53,25 +53,15 @@ export const postFrontMatterSchema = baseFrontMatterSchema.extend({
 });
 
 /**
- * 開発ログコンテンツのフロントマターのスキーマを定義する。
- * 基本的なフロントマターのみを使用し、追加のフィールドは必要ない。
- */
-export const devlogFrontMatterSchema = baseFrontMatterSchema;
-
-/**
  * コンテンツの種類ごとにフロントマターの型を定義する。
- * 'posts'はPostFrontMatter、'devlog'はDevlogFrontMatterを使用する。
+ * 現在は投稿記事の front matter のみを扱う。
  */
 type FrontMatterByKind = {
   posts: z.infer<typeof postFrontMatterSchema>;
-  devlog: z.infer<typeof devlogFrontMatterSchema>;
 };
 
 // コンテンツの種類に応じたフロントマターの型を定義する。
 export type PostFrontMatter = FrontMatterByKind['posts'];
-
-// 開発ログのフロントマターの型を定義する。
-export type DevlogFrontMatter = FrontMatterByKind['devlog'];
 
 // コンテンツのフロントマターの型を定義する。ContentKindに応じたフロントマターの型になる。
 export type FrontMatter = FrontMatterByKind[ContentKind];
@@ -95,7 +85,6 @@ export type PostEntry = ContentEntry<'posts'>;
  */
 const frontMatterSchemaByKind = {
   posts: postFrontMatterSchema,
-  devlog: devlogFrontMatterSchema,
 } satisfies {
   [K in ContentKind]: z.ZodType<FrontMatterByKind[K]>;
 };

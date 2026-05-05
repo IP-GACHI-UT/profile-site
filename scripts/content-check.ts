@@ -1,11 +1,9 @@
 import { listEntries } from '../src/lib/content';
 
 async function main() {
-  const posts = await listEntries('posts');
-  const devlog = await listEntries('devlog');
-  const all = [...posts, ...devlog];
+  const all = await listEntries('posts');
 
-  // posts/devlog 横断で slug ユニーク
+  // posts 横断で slug ユニーク
   const seen = new Map<string, string>();
   for (const e of all) {
     const slug = e.frontMatter.slug;
