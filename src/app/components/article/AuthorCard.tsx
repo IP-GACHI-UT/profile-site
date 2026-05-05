@@ -13,7 +13,7 @@ export default function AuthorCard({ authorName }: Props) {
   const author = getAuthorByName(authorName);
 
   return (
-    <aside className="rounded-lg border border-border bg-surface p-6">
+    <aside className="rounded-lg border border-border bg-surface p-6 shadow-sm md:p-7">
       <div className="flex items-center gap-4">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-lg font-bold text-accent">
           {createInitial(author.name)}

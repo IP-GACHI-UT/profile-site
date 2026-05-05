@@ -57,29 +57,27 @@ export default async function Page({
     <>
       <Scroll50Tracker />
 
-      <main className="py-14">
-        <Container className="max-w-5xl space-y-8">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-            <article className="rounded-lg border border-border bg-surface p-6 shadow-sm md:p-10">
-              <header className="mb-10 border-b border-border pb-6">
-                <p className="mb-3 text-sm text-text-muted">
-                  {authorProfile.name} · {entry.frontMatter.date}
-                </p>
+      <main>
+        <Container className="max-w-3xl py-12">
+          <article>
+            <header className="mb-10 border-b border-border pb-6">
+              <p className="mb-3 text-sm text-text-muted">
+                {authorProfile.name} · {entry.frontMatter.date}
+              </p>
 
-                <h1 className="text-3xl font-bold leading-tight text-text-primary md:text-4xl">
-                  {entry.frontMatter.title}
-                </h1>
-              </header>
+              <h1 className="text-3xl font-bold leading-tight text-text-primary md:text-4xl">
+                {entry.frontMatter.title}
+              </h1>
+            </header>
 
-              <ArticleProse>
-                <MDXRemote source={entry.body} />
-              </ArticleProse>
-            </article>
+            <ArticleProse>
+              <MDXRemote source={entry.body} />
+            </ArticleProse>
 
-            <div className="lg:sticky lg:top-24">
+            <div className="mt-14">
               <AuthorCard authorName={entry.frontMatter.author} />
             </div>
-          </div>
+          </article>
         </Container>
       </main>
     </>
