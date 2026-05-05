@@ -102,6 +102,24 @@ export async function listPublishedPosts(): Promise<PostEntry[]> {
   return posts.filter((post) => !post.frontMatter.draft);
 }
 
+export async function getAdjacentPosts(slug: string): Promise<{
+  newerPost: PostEntry | null;
+  olderPost: PostEntry | null;
+}> {
+  const posts = await listPublishedPosts();
+  const currentIndex = posts.findIndex(
+    (post) => post.frontMatter.slug === slug,
+  );
+
+  return {
+    newerPost: currentIndex > 0 ? posts[currentIndex - 1] : null,
+    olderPost:
+      currentIndex >= 0 && currentIndex < posts.length - 1
+        ? posts[currentIndex + 1]
+        : null,
+  };
+}
+
 export async function getPostBySlug(slug: string): Promise<PostEntry | null> {
   if (!slugRegex.test(slug)) {
     return null;

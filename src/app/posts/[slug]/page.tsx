@@ -7,6 +7,7 @@ import Container from '@/app/components/common/Container';
 import { Scroll50Tracker } from '@/app/components/Scroll50Tracker';
 import { getAuthorByName } from '@/lib/authors';
 import {
+  getAdjacentPosts,
   getPostBySlug,
   listPublishedPosts,
   shouldHideDraft,
@@ -53,15 +54,9 @@ export default async function Page({
   }
 
   const authorProfile = getAuthorByName(entry.frontMatter.author);
-  const posts = await listPublishedPosts();
-  const currentIndex = posts.findIndex(
-    (post) => post.frontMatter.slug === entry.frontMatter.slug,
+  const { newerPost, olderPost } = await getAdjacentPosts(
+    entry.frontMatter.slug,
   );
-  const newerPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
-  const olderPost =
-    currentIndex >= 0 && currentIndex < posts.length - 1
-      ? posts[currentIndex + 1]
-      : null;
 
   return (
     <>
