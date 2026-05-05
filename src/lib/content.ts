@@ -3,11 +3,9 @@ import path from 'node:path';
 import matter from 'gray-matter';
 import { z } from 'zod';
 import { postCategoryValues } from '@/lib/post-categories';
+import { isValidSlug, slugRegex } from '@/lib/slug';
 
 const postsDir = path.join(process.cwd(), 'content', 'posts');
-
-// slugはファイル名にも使うため、小文字英数字と単独のハイフンだけを許可する。
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const baseFrontMatterSchema = z.object({
   title: z.string().min(1),
@@ -121,7 +119,7 @@ export async function getAdjacentPosts(slug: string): Promise<{
 }
 
 export async function getPostBySlug(slug: string): Promise<PostEntry | null> {
-  if (!slugRegex.test(slug)) {
+  if (!isValidSlug(slug)) {
     return null;
   }
 

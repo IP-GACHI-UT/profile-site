@@ -2,8 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+import { slugRegex } from '@/lib/slug';
 
 const createPostRequestSchema = z.object({
   slug: z.string().regex(slugRegex),
