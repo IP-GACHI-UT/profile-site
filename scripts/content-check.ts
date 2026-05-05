@@ -1,7 +1,7 @@
-import { listEntries } from '../src/lib/content';
+import { listPosts } from '../src/lib/content';
 
 async function main() {
-  const all = await listEntries('posts');
+  const all = await listPosts();
 
   // posts 横断で slug ユニーク
   const seen = new Map<string, string>();

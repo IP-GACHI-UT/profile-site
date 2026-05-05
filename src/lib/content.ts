@@ -4,36 +4,11 @@ import matter from 'gray-matter';
 import { z } from 'zod';
 import { postCategoryValues } from '@/lib/post-categories';
 
-// コンテンツの種類を表す型。現在は投稿記事のみを扱う。
-export type ContentKind = 'posts';
+const postsDir = path.join(process.cwd(), 'content', 'posts');
 
-// スラッグの正規表現。小文字の英数字とハイフンのみを許可し、ハイフンは連続して使用できない。
+// slugはファイル名にも使うため、小文字英数字と単独のハイフンだけを許可する。
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-/**
- * Node.jsのエラーオブジェクトかどうかを判定する。
- * @param e 判定する値
- * @returns NodeJS.ErrnoExceptionであればtrue、それ以外はfalse
- */
-function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
-  return typeof e === 'object' && e !== null && 'code' in e;
-}
-
-/**
- * 日付の値を正規化する。DateオブジェクトであればISO形式の文字列に変換する。
- * @param value 正規化する値
- * @returns 正規化された日付文字列または元の値
- */
-function normalizeDateValue(value: unknown) {
-  if (value instanceof Date) {
-    return value.toISOString().slice(0, 10);
-  }
-
-  return value;
-}
-
-// コンテンツのフロントマターの基本的なスキーマを定義する。
-// タイトル、日付、スラッグ、説明、タグ、ドラフト状態を含む。
 const baseFrontMatterSchema = z.object({
   title: z.string().min(1),
   date: z.preprocess(normalizeDateValue, z.string().min(1)),
@@ -43,150 +18,107 @@ const baseFrontMatterSchema = z.object({
   draft: z.boolean(),
 });
 
-/**
- * 投稿コンテンツのフロントマターのスキーマを定義する。
- * 基本的なフロントマターに加えて、著者とカテゴリを必須とする。
- */
 export const postFrontMatterSchema = baseFrontMatterSchema.extend({
   author: z.string().min(1),
   category: z.enum(postCategoryValues),
 });
 
-/**
- * コンテンツの種類ごとにフロントマターの型を定義する。
- * 現在は投稿記事の front matter のみを扱う。
- */
-type FrontMatterByKind = {
-  posts: z.infer<typeof postFrontMatterSchema>;
-};
+export type PostFrontMatter = z.infer<typeof postFrontMatterSchema>;
 
-// コンテンツの種類に応じたフロントマターの型を定義する。
-export type PostFrontMatter = FrontMatterByKind['posts'];
-
-// コンテンツのフロントマターの型を定義する。ContentKindに応じたフロントマターの型になる。
-export type FrontMatter = FrontMatterByKind[ContentKind];
-
-/**
- * コンテンツエントリーの型を定義する。
- * ContentKindに応じたフロントマターの型を持ち、ファイルパスと本文も含む。
- * @template K コンテンツの種類。ContentKindのいずれか。
- */
-export type ContentEntry<K extends ContentKind = ContentKind> = {
-  kind: K;
+export type PostEntry = {
+  kind: 'posts';
   filePath: string;
-  frontMatter: FrontMatterByKind[K];
+  frontMatter: PostFrontMatter;
   body: string;
 };
 
-export type PostEntry = ContentEntry<'posts'>;
+function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
+  return typeof error === 'object' && error !== null && 'code' in error;
+}
 
-/**
- * コンテンツの種類ごとにフロントマターのスキーマを定義するオブジェクト。
- */
-const frontMatterSchemaByKind = {
-  posts: postFrontMatterSchema,
-} satisfies {
-  [K in ContentKind]: z.ZodType<FrontMatterByKind[K]>;
-};
+function normalizeDateValue(value: unknown) {
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10);
+  }
 
-// コンテンツディレクトリのパスを取得する関数。
-const contentDir = (kind: ContentKind) =>
-  path.join(process.cwd(), 'content', kind);
+  return value;
+}
 
-/**
- * 指定されたコンテンツの種類に応じたエントリーの一覧を取得する。
- * @param kind コンテンツの種類
- * @returns コンテンツエントリーの配列
- */
-export async function listEntries<K extends ContentKind>(
-  kind: K,
-): Promise<ContentEntry<K>[]> {
-  const dir = contentDir(kind);
-  const files = (await fs.readdir(dir)).filter((f) => f.endsWith('.mdx'));
+export function parsePostFrontMatter(data: unknown): PostFrontMatter {
+  return postFrontMatterSchema.parse(data);
+}
 
-  const entries: ContentEntry<K>[] = [];
+export async function readPostFile(filePath: string): Promise<PostEntry> {
+  const raw = await fs.readFile(filePath, 'utf8');
+  const parsed = matter(raw);
+
+  let frontMatter: PostFrontMatter;
+  try {
+    frontMatter = parsePostFrontMatter(parsed.data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `[content] invalid post front matter: ${filePath}\n${message}`,
+    );
+  }
+
+  return {
+    kind: 'posts',
+    filePath,
+    frontMatter,
+    body: parsed.content,
+  };
+}
+
+export async function listPosts(): Promise<PostEntry[]> {
+  const files = (await fs.readdir(postsDir)).filter((file) =>
+    file.endsWith('.mdx'),
+  );
+
+  const posts: PostEntry[] = [];
 
   for (const file of files) {
-    const filePath = path.join(dir, file);
-    const raw = await fs.readFile(filePath, 'utf8');
-    const parsed = matter(raw);
+    const filePath = path.join(postsDir, file);
+    const post = await readPostFile(filePath);
+    const expectedFileName = `${post.frontMatter.slug}.mdx`;
 
-    const fm = frontMatterSchemaByKind[kind].parse(
-      parsed.data,
-    ) as FrontMatterByKind[K];
-
-    const expected = `${fm.slug}.mdx`;
-    if (file !== expected) {
+    if (file !== expectedFileName) {
       throw new Error(
-        `[content] filename must match slug: file="${file}" expected="${expected}"`,
+        `[content] filename must match slug: file="${file}" expected="${expectedFileName}"`,
       );
     }
 
-    entries.push({
-      kind,
-      filePath,
-      frontMatter: fm,
-      body: parsed.content,
-    });
+    posts.push(post);
   }
 
-  return entries.sort((a, b) =>
+  return posts.sort((a, b) =>
     a.frontMatter.date < b.frontMatter.date ? 1 : -1,
   );
 }
 
-/**
- * 投稿一覧に表示する公開済みの記事だけを取得する。
- * @returns 公開済み投稿の配列
- */
 export async function listPublishedPosts(): Promise<PostEntry[]> {
-  const entries = await listEntries('posts');
+  const posts = await listPosts();
 
-  return entries.filter((entry) => !entry.frontMatter.draft);
+  return posts.filter((post) => !post.frontMatter.draft);
 }
 
-/**
- * 指定されたスラッグに対応するコンテンツエントリーを取得する。
- * @param kind コンテンツの種類
- * @param slug コンテンツのスラッグ
- * @returns コンテンツエントリーまたはnull
- */
-export async function getEntryBySlug<K extends ContentKind>(
-  kind: K,
-  slug: string,
-): Promise<ContentEntry<K> | null> {
+export async function getPostBySlug(slug: string): Promise<PostEntry | null> {
   if (!slugRegex.test(slug)) {
     return null;
   }
 
-  const filePath = path.join(contentDir(kind), `${slug}.mdx`);
+  const filePath = path.join(postsDir, `${slug}.mdx`);
 
   try {
-    const raw = await fs.readFile(filePath, 'utf8');
-    const parsed = matter(raw);
+    const post = await readPostFile(filePath);
 
-    let fm: FrontMatterByKind[K];
-    try {
-      fm = frontMatterSchemaByKind[kind].parse(
-        parsed.data,
-      ) as FrontMatterByKind[K];
-    } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : String(error);
-      throw new Error(`[content] invalid front matter: ${filePath}\n${msg}`);
-    }
-
-    if (fm.slug !== slug) {
+    if (post.frontMatter.slug !== slug) {
       throw new Error(
-        `[content] frontmatter slug mismatch: ${fm.slug} != ${slug}`,
+        `[content] frontmatter slug mismatch: ${post.frontMatter.slug} != ${slug}`,
       );
     }
 
-    return {
-      kind,
-      filePath,
-      frontMatter: fm,
-      body: parsed.content,
-    };
+    return post;
   } catch (error: unknown) {
     if (isErrnoException(error) && error.code === 'ENOENT') {
       return null;
@@ -196,22 +128,8 @@ export async function getEntryBySlug<K extends ContentKind>(
   }
 }
 
-/**
- * 投稿スラッグから記事を取得する。
- * @param slug 投稿スラッグ
- * @returns 投稿エントリーまたはnull
- */
-export async function getPostBySlug(slug: string): Promise<PostEntry | null> {
-  return getEntryBySlug('posts', slug);
-}
-
-/**
- * 本番環境で下書きを非表示にする判定を行う。
- * @param entry 判定対象のエントリー
- * @returns 本番環境で非表示にすべき場合はtrue
- */
 export function shouldHideDraft(
-  entry: Pick<ContentEntry, 'frontMatter'>,
+  entry: Pick<PostEntry, 'frontMatter'>,
 ): boolean {
   return process.env.NODE_ENV === 'production' && entry.frontMatter.draft;
 }
