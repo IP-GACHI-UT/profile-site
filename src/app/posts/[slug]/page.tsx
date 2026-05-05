@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
+import ArticleNavigation from '@/app/components/article/ArticleNavigation';
 import ArticleProse from '@/app/components/article/ArticleProse';
 import AuthorCard from '@/app/components/article/AuthorCard';
 import Container from '@/app/components/common/Container';
@@ -52,6 +53,15 @@ export default async function Page({
   }
 
   const authorProfile = getAuthorByName(entry.frontMatter.author);
+  const posts = await listPublishedPosts();
+  const currentIndex = posts.findIndex(
+    (post) => post.frontMatter.slug === entry.frontMatter.slug,
+  );
+  const newerPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+  const olderPost =
+    currentIndex >= 0 && currentIndex < posts.length - 1
+      ? posts[currentIndex + 1]
+      : null;
 
   return (
     <>
@@ -77,6 +87,8 @@ export default async function Page({
             <div className="mt-14">
               <AuthorCard authorName={entry.frontMatter.author} />
             </div>
+
+            <ArticleNavigation newerPost={newerPost} olderPost={olderPost} />
           </article>
         </Container>
       </main>
