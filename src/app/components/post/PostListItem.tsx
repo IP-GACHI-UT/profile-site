@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getAuthorByName } from '@/lib/authors';
 import type { PostEntry } from '@/lib/content';
+import CategoryBadge from './CategoryBadge';
 
 type Props = {
   post: PostEntry;
@@ -25,7 +26,7 @@ export default function PostListItem({ post }: Props) {
             {title}
           </h2>
 
-          <span className="category-pill">{category}</span>
+          <CategoryBadge category={category} />
         </article>
       </Link>
     </li>
