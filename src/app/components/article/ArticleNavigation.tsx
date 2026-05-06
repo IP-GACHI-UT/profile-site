@@ -43,16 +43,16 @@ export default function ArticleNavigation({ newerPost, olderPost }: Props) {
       aria-label="記事ナビゲーション"
     >
       <div className="grid gap-4 md:grid-cols-2">
-        {newerPost ? (
-          <ArticleNavigationLink label="新しい記事" post={newerPost} />
+        {olderPost ? (
+          <ArticleNavigationLink label="前の記事" post={olderPost} />
         ) : (
           <div aria-hidden="true" />
         )}
 
-        {olderPost ? (
+        {newerPost ? (
           <ArticleNavigationLink
-            label="古い記事"
-            post={olderPost}
+            label="次の記事"
+            post={newerPost}
             align="right"
           />
         ) : null}
