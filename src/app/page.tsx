@@ -18,10 +18,8 @@ export default async function Home() {
         </section>
 
         <section>
-          <div className="mb-5 border-l-2 border-accent pl-4">
-            <h2 className="text-lg font-bold tracking-tight text-text-primary lg:text-xl">
-              最新の記事
-            </h2>
+          <div className="mb-5">
+            <SectionLabel title="最新の記事" headingLevel={2} />
           </div>
           <PostList posts={posts} />
         </section>
