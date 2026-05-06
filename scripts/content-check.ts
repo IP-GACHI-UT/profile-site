@@ -3,7 +3,7 @@ import { listPosts } from '../src/lib/content';
 async function main() {
   const all = await listPosts();
 
-  // posts 横断で slug ユニーク
+  // 記事コンテンツ内で slug を一意に保つ
   const seen = new Map<string, string>();
   for (const e of all) {
     const slug = e.frontMatter.slug;
