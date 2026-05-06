@@ -1,17 +1,15 @@
 import Link from 'next/link';
-import { getAuthorByName } from '@/lib/authors';
+import type { AuthorProfile } from '@/lib/authors';
 
 type Props = {
-  authorName: string;
+  author: AuthorProfile;
 };
 
 function createInitial(name: string) {
   return name.slice(0, 1).toUpperCase();
 }
 
-export default function AuthorCard({ authorName }: Props) {
-  const author = getAuthorByName(authorName);
-
+export default function AuthorCard({ author }: Props) {
   return (
     <aside className="rounded-lg border border-border bg-surface p-6 shadow-sm md:p-7">
       <div className="flex items-center gap-4">

@@ -80,7 +80,7 @@ export default async function Page({
             </ArticleProse>
 
             <div className="mt-14">
-              <AuthorCard authorName={entry.frontMatter.author} />
+              <AuthorCard author={authorProfile} />
             </div>
 
             <ArticleNavigation newerPost={newerPost} olderPost={olderPost} />
