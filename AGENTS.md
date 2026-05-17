@@ -17,8 +17,7 @@
 - `src/app/_components` : 特定ページ専用のコンポーネント
 - `src/app/components` : アプリ全体で再利用する共通コンポーネント
 - `src/lib` : コンテンツ取得・整形・ドメインロジック
-- `content/posts` : 通常の記事コンテンツ（MDX）
-- `content/devlog` : 開発ログコンテンツ（MDX）
+- `content/posts` : 記事コンテンツ（MDX）
 - `scripts/content-check.ts` : コンテンツ検証スクリプト
 - `tests` : E2E テスト
 - `.storybook` : Storybook 設定
@@ -50,7 +49,7 @@
 
 ## コンテンツルール
 
-すべてのコンテンツは `content/posts` または `content/devlog` に配置してください。
+すべてのコンテンツは `content/posts` に配置してください。
 
 各 `.mdx` ファイルには以下の front matter を必須とします。
 
@@ -65,7 +64,7 @@
 
 - ファイル名は `slug.mdx` と一致させる
 - slug は lowercase の kebab-case
-- `posts` と `devlog` をまたいで slug を重複させない
+- slug を重複させない
 - コンテンツ変更時は `pnpm content:check` を通す
 
 ## 実装ルール

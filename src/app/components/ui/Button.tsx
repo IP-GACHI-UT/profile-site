@@ -21,10 +21,11 @@ export default function Button({
   type = 'button',
   disabled = false,
 }: Props) {
-  const baseStyle = 'flex items-center gap-2 px-4 py-2 rounded-lg transition';
+  const baseStyle =
+    'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition';
 
   const styles = {
-    primary: 'bg-green-500 text-white hover:bg-green-600',
+    primary: 'bg-accent text-white hover:bg-accent-hover',
     secondary: 'bg-gray-200 text-black hover:bg-gray-300',
   };
 

@@ -1,6 +1,13 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { slugRegex } from '@/lib/slug';
+
+const createPostRequestSchema = z.object({
+  slug: z.string().regex(slugRegex),
+  mdx: z.string().min(1),
+});
 
 export const runtime = 'nodejs';
 export async function POST(req: NextRequest) {
@@ -9,16 +16,20 @@ export async function POST(req: NextRequest) {
     return new NextResponse(null, { status: 404 });
   }
 
-  const { mdx, slug } = await req.json();
-  const safeSlug = typeof slug === 'string' ? slug : '';
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(safeSlug)) {
-    return NextResponse.json({ message: 'slugが不正です' }, { status: 400 });
+  let body: z.infer<typeof createPostRequestSchema>;
+  try {
+    body = createPostRequestSchema.parse(await req.json());
+  } catch (_error: unknown) {
+    return NextResponse.json(
+      { message: 'リクエスト内容が不正です' },
+      { status: 400 },
+    );
   }
 
-  const fileName = `${safeSlug}.mdx`;
+  const fileName = `${body.slug}.mdx`;
   const filePath = path.join(process.cwd(), 'content/posts', fileName);
 
-  fs.writeFileSync(filePath, mdx);
+  await fs.writeFile(filePath, body.mdx, 'utf8');
 
   return NextResponse.json({ message: '保存成功' });
 }

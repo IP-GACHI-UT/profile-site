@@ -2,6 +2,8 @@
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import Button from '@/app/components/ui/Button';
+import { listAuthorNames } from '@/lib/authors';
+import { postCategoryValues } from '@/lib/post-categories';
 
 /**
  *  投稿フォームコンポーネント
@@ -12,18 +14,25 @@ import Button from '@/app/components/ui/Button';
  * - バリデーションとエラーハンドリングを実装
  */
 export default function PostForm() {
+  const authorOptions = listAuthorNames();
+  const categoryOptions = [...postCategoryValues];
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
+  const [category, setCategory] = useState('');
   const [content, setContent] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const canSubmit =
-    title.trim().length > 0 && author.length > 0 && content.trim().length > 0;
+    title.trim().length > 0 &&
+    author.length > 0 &&
+    category.length > 0 &&
+    content.trim().length > 0;
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     if (!title.trim()) newErrors.title = 'タイトルは必須です';
     if (!author) newErrors.author = '投稿者を選択してください';
+    if (!category) newErrors.category = 'カテゴリを選択してください';
     if (!content.trim()) newErrors.content = '本文は必須です';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -40,6 +49,7 @@ slug: ${yamlQuote(slug)}
 description: ${yamlQuote('投稿フォームから作成')}
 tags: []
 author: ${yamlQuote(author)}
+category: ${yamlQuote(category)}
 draft: false
 ---
 
@@ -71,6 +81,7 @@ ${content}
       // リセット
       setTitle('');
       setAuthor('');
+      setCategory('');
       setContent('');
       setErrors({});
     } catch (_error) {
@@ -81,7 +92,7 @@ ${content}
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-2">
+    <div className="mx-auto max-w-2xl p-2">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
         <h1 className="text-3xl font-bold text-left mb-4 text-gray-900 dark:text-white">
           記事を書く
@@ -128,12 +139,43 @@ ${content}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="">選択してください</option>
-              <option value="user1">ユーザー1</option>
-              <option value="user2">ユーザー2</option>
+              {authorOptions.map((authorOption) => (
+                <option key={authorOption} value={authorOption}>
+                  {authorOption}
+                </option>
+              ))}
             </select>
             {errors.author && (
               <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                 {errors.author}
+              </p>
+            )}
+          </div>
+
+          {/* カテゴリ */}
+          <div>
+            <label
+              htmlFor="post-category"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 after:content-['*'] after:ml-0.5 after:text-red-500"
+            >
+              カテゴリ
+            </label>
+            <select
+              id="post-category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="">選択してください</option>
+              {categoryOptions.map((categoryOption) => (
+                <option key={categoryOption} value={categoryOption}>
+                  {categoryOption}
+                </option>
+              ))}
+            </select>
+            {errors.category && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {errors.category}
               </p>
             )}
           </div>

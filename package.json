@@ -64,8 +64,11 @@
     "zod": "^4.3.6"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,css,mdx,json}": [
+    "*.{js,jsx,ts,tsx,css,json,jsonc}": [
       "biome check"
+    ],
+    "*.mdx": [
+      "pnpm content:check"
     ]
   }
 }
