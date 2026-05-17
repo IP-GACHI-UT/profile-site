@@ -11,9 +11,9 @@ export default async function Home() {
       <Container>
         <section className="mb-7 pt-10 pb-3">
           <SectionLabel
-            label="ゲーム × 開発 × 実践知"
-            title="ゲームと開発の知見を共有する"
-            description="GtoWell は、ゲームのプレイ感想・技術・開発事情・リリース情報をまとめて読めるコンテンツサイトです。"
+            label="GtoWell"
+            title="エンジニアによるアプリ開発備忘録"
+            description="ゲームのプレイ感想・開発事情・リリース情報をお届けします。"
           />
         </section>
 

@@ -14,7 +14,7 @@ export default function SectionLabel({
   const Heading = headingLevel === 2 ? 'h2' : 'h1';
 
   return (
-    <div className="space-y-3 border-l-2 border-accent pl-4">
+    <header>
       {label ? <p className="section-label">{label}</p> : null}
 
       <div className="space-y-2">
@@ -27,6 +27,6 @@ export default function SectionLabel({
           </p>
         ) : null}
       </div>
-    </div>
+    </header>
   );
 }
