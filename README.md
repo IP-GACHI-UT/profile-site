@@ -2,16 +2,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Node.jsは`.node-version`の22.23.4、pnpmは10.13.1を使用します。22.23.4 / 24.22.1 / 26.12.1未満の各系列は起動・ビルド・検証で拒否します。依存は`pnpm install --frozen-lockfile`で復元し、`pnpm test:security`で実行版の境界を確認します。jsdom経由のUndici 7系は7.30.1以上へ固定しています。
+
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

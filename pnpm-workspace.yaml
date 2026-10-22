@@ -1,3 +1,7 @@
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+engineStrict: true
+overrides:
+  'undici@>=7.0.0 <7.30.1': 7.30.1

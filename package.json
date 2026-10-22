@@ -3,21 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "lint": "biome check .",
-    "lint:fix": "biome check . --fix",
-    "typecheck": "next typegen && tsc -p tsconfig.json --noEmit",
-    "content:check": "tsx scripts/content-check.ts",
-    "format": "biome format --write .",
-    "format:check": "biome check .",
+    "dev": "node scripts/check-runtime.cjs && next dev",
+    "build": "node scripts/check-runtime.cjs && next build",
+    "lint": "node scripts/check-runtime.cjs && biome check .",
+    "lint:fix": "node scripts/check-runtime.cjs && biome check . --fix",
+    "typecheck": "node scripts/check-runtime.cjs && next typegen && tsc -p tsconfig.json --noEmit",
+    "content:check": "node scripts/check-runtime.cjs && tsx scripts/content-check.ts",
+    "format": "node scripts/check-runtime.cjs && biome format --write .",
+    "format:check": "node scripts/check-runtime.cjs && biome check .",
     "prepare": "husky",
-    "storybook": "storybook dev -p 6006",
-    "test": "jest",
-    "test:e2e": "playwright test",
-    "test:e2e:report": "playwright show-report",
-    "build-storybook": "storybook build",
-    "react-doctor": "react-doctor ."
+    "storybook": "node scripts/check-runtime.cjs && storybook dev -p 6006",
+    "test": "node scripts/check-runtime.cjs && jest",
+    "test:e2e": "node scripts/check-runtime.cjs && playwright test",
+    "test:e2e:report": "node scripts/check-runtime.cjs && playwright show-report",
+    "build-storybook": "node scripts/check-runtime.cjs && storybook build",
+    "react-doctor": "node scripts/check-runtime.cjs && react-doctor .",
+    "preinstall": "node scripts/check-runtime.cjs",
+    "security:runtime": "node scripts/check-runtime.cjs",
+    "test:security": "node scripts/check-runtime.cjs && node --test scripts/check-runtime.test.cjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.1.6",
@@ -70,5 +73,9 @@
     "*.mdx": [
       "pnpm content:check"
     ]
-  }
+  },
+  "engines": {
+    "node": "^22.23.4 || ^24.22.1 || ^26.12.1"
+  },
+  "packageManager": "pnpm@10.13.1"
 }

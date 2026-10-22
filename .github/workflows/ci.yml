@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: pnpm
 
       - name: Show versions
@@ -28,8 +28,14 @@ jobs:
           node -v
           pnpm -v
 
+      - name: Verify Node security baseline
+        run: node scripts/check-runtime.cjs
+
       - name: Install deps
         run: pnpm install --frozen-lockfile
+
+      - name: Verify runtime and jsdom regression
+        run: pnpm test:security
 
       - name: Format check
         run: pnpm format:check
